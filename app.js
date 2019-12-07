@@ -1,59 +1,55 @@
-function onReady() {
-  let id = 0;
-  const toDos = [];
-  const addToDoForm = document.getElementById('addToDoForm');
+function onReady(){
+  let todos = [];
+  let currentToDoId = 1;
+  const ADD_TODO_FORM = document.getElementById("addToDoForm");
+  const NEW_TODO_TEXT = document.getElementById("newToDoText");
+  const TODO_LIST = document.getElementById("toDoList");
 
-  function createNewToDo() {
-    const newToDoText = document.getElementById('newToDoText');
-    if (!newToDoText.value) { return; }
+  ADD_TODO_FORM.addEventListener('submit', (event) => {
+    event.preventDefault();
 
-    toDos.push({
-      title: newToDoText.value,
-      complete: false,
-      id++;
-    });
+    let title = NEW_TODO_TEXT.value;
 
-    newToDoText.value = '';
-
-    renderTheUI;
-}
-
-function renderTheUI() {
-  const toDoList = document.getElementById('toDoList');
-
-  toDoList.textContent = '';
-
-  toDos.forEach(function(toDo){
-    const newLi = document.createElement('li');
-    const checkbox = document.createElement('input');
-    checkbox.type = "checkbox";
-
-    newLi.textContent = toDo.title;
-
-    toDoList.appendChild(newLi);
-    newLi.appendChild(checkbox);
-    newLi.appendChild(deleteBtn);
-  });
-}
-
-addToDoForm.addEventListener('submit', event => {
-  event.preventDefault();
-  createNewToDo();
-});
-
-
-const deleteBtn = document.createElement('button');
-      deleteBtn.textContent = "Delete";
-
-      deleteBtn.addEventListener('click', event => {
-        toDos = toDos.filter(function(item){
-          return item.id !== toDo.id;
-      }
+    let todoObj = {
+      name: title,
+      id: currentToDoId
     };
 
+    currentToDoId++;
 
-renderTheUI();
-}
+    todos.push(todoObj);
+
+    console.log(todos);
+
+    let newLi = document.createElement('li'); // <li></li>
+    newLi.textContent = title; // <li>Woo!</li>
+
+    let checkbox = document.createElement('input');
+    checkbox.type = "checkbox";
+
+    let deleteBtn = document.createElement('button');
+    deleteBtn.textContent = "Delete";
+
+
+    deleteBtn.addEventListener('click', function(event) {
+      let todoText = this.parentElement.childNodes[0].nodeValue;
+      todos.forEach(function(todoItem, index){
+        if(todoItem.name == todoText){
+          // delete that item
+          todos.splice(index, 1);
+        }
+        console.log(todos);
+      })
+      TODO_LIST.removeChild(this.parentElement);
+    });
+
+
+    newLi.appendChild(checkbox);
+    newLi.appendChild(deleteBtn);
+    TODO_LIST.appendChild(newLi);
+    NEW_TODO_TEXT.value = "";
+  });
+};
 
 window.onload = function() {
   onReady();
